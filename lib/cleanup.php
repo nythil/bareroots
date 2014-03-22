@@ -131,45 +131,6 @@ function roots_embed_wrap($cache, $url, $attr = '', $post_ID = '') {
 add_filter('embed_oembed_html', 'roots_embed_wrap', 10, 4);
 
 /**
- * Add Bootstrap thumbnail styling to images with captions
- * Use <figure> and <figcaption>
- *
- * @link http://justintadlock.com/archives/2011/07/01/captions-in-wordpress
- */
-function roots_caption($output, $attr, $content) {
-  if (is_feed()) {
-    return $output;
-  }
-
-  $defaults = array(
-    'id'      => '',
-    'align'   => 'alignnone',
-    'width'   => '',
-    'caption' => ''
-  );
-
-  $attr = shortcode_atts($defaults, $attr);
-
-  // If the width is less than 1 or there is no caption, return the content wrapped between the [caption] tags
-  if ($attr['width'] < 1 || empty($attr['caption'])) {
-    return $content;
-  }
-
-  // Set up the attributes for the caption <figure>
-  $attributes  = (!empty($attr['id']) ? ' id="' . esc_attr($attr['id']) . '"' : '' );
-  $attributes .= ' class="thumbnail wp-caption ' . esc_attr($attr['align']) . '"';
-  $attributes .= ' style="width: ' . (esc_attr($attr['width']) + 10) . 'px"';
-
-  $output  = '<figure' . $attributes .'>';
-  $output .= do_shortcode($content);
-  $output .= '<figcaption class="caption wp-caption-text">' . $attr['caption'] . '</figcaption>';
-  $output .= '</figure>';
-
-  return $output;
-}
-add_filter('img_caption_shortcode', 'roots_caption', 10, 3);
-
-/**
  * Remove unnecessary dashboard widgets
  *
  * @link http://www.deluxeblogtips.com/2011/01/remove-dashboard-widgets-in-wordpress.html
@@ -231,9 +192,7 @@ function roots_nice_search_redirect() {
     exit();
   }
 }
-if (current_theme_supports('nice-search')) {
-  add_action('template_redirect', 'roots_nice_search_redirect');
-}
+add_action('template_redirect', 'roots_nice_search_redirect');
 
 /**
  * Fix for empty search queries redirecting to home page
@@ -259,3 +218,4 @@ function roots_get_search_form($form) {
   return $form;
 }
 add_filter('get_search_form', 'roots_get_search_form');
+
