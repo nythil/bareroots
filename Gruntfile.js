@@ -32,7 +32,7 @@ module.exports = function(grunt) {
     version: {
       assets: {
         files: {
-          'lib/scripts.php': ['assets/css/medos.css', 'assets/js/main.js']
+          'lib/scripts.php': ['assets/css/main.css', 'assets/js/main.js']
         },
         options: {
           querystring: {
