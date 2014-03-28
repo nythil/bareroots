@@ -32,7 +32,7 @@ module.exports = function(grunt) {
     version: {
       assets: {
         files: {
-          'lib/scripts.php': ['assets/css/main.css', 'assets/js/main.js']
+          'lib/scripts.php': ['assets/css/main.css', 'assets/js/scripts.js']
         },
         options: {
           querystring: {
@@ -45,6 +45,7 @@ module.exports = function(grunt) {
     watch: {
       less: {
         files: [
+          'assets/js/*.js',
           'assets/less/*.less'
         ],
         tasks: ['less', 'version']
