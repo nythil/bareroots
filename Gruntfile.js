@@ -1,83 +1,100 @@
 'use strict';
 module.exports = function(grunt) {
+  // Load all tasks
+  require('load-grunt-tasks')(grunt);
+  // Show elapsed time
+  require('time-grunt')(grunt);
 
   grunt.initConfig({
-    jshint: {
-      options: {
-        jshintrc: '.jshintrc'
-      },
-      all: [
-        'Gruntfile.js',
-        'assets/js/*.js',
-        '!assets/js/scripts.min.js'
-      ]
-    },
     less: {
-      dist: {
+      dev: {
         files: {
           'assets/css/main.css': [
-            'assets/less/app.less'
+            'assets/less/main.less'
           ]
         },
         options: {
           compress: false,
           // LESS source map
           // To enable, set sourceMap to true and update sourceMapRootpath based on your install
-          sourceMap: false,
+          sourceMap: true,
           sourceMapFilename: 'assets/css/main.css.map',
           sourceMapRootpath: '/app/themes/roots/'
+        }
+      },
+      build: {
+        files: {
+          'assets/css/main.min.css': [
+            'assets/less/main.less'
+          ]
+        },
+        options: {
+          compress: true
+        }
+      }
+    },
+    uglify: {
+      dist: {
+        files: {
+          'assets/js/scripts.min.js': ['assets/js/scripts.js']
+        }
+      },
+      modernizr: {
+        files: {
+          'assets/js/vendor/modernizr.min.js': ['assets/js/vendor/modernizr-*.js']
         }
       }
     },
     version: {
-      assets: {
-        files: {
-          'lib/scripts.php': ['assets/css/main.css', 'assets/js/scripts.js']
-        },
+      default: {
         options: {
+          format: true,
+          length: 32,
+          manifest: 'assets/manifest.json',
           querystring: {
-            style: 'app_main',
-            script: 'app_scripts'
+            style: 'roots_css',
+            script: 'roots_js'
           }
+        },
+        files: {
+          'lib/scripts.php': 'assets/{css,js}/{main,scripts}{.min,}.{css,js}'
         }
       }
     },
     watch: {
       less: {
         files: [
-          'assets/js/*.js',
           'assets/less/*.less'
         ],
-        tasks: ['less', 'version']
+        tasks: ['less:dev', 'version']
       },
       js: {
         files: [
-          '<%= jshint.all %>'
+          'assets/js/*.js'
         ],
-        tasks: ['jshint', 'version']
+        tasks: ['version']
       }
     },
     clean: {
       dist: [
-        'assets/css/main.css'
+        'assets/css/main.min.css',
+        'assets/js/scripts.min.js'
       ]
     }
   });
 
-  // Load tasks
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-wp-assets');
-
   // Register tasks
   grunt.registerTask('default', [
-    'clean',
-    'less',
-    'version'
+    'dev'
   ]);
   grunt.registerTask('dev', [
-    'watch'
+    'less:dev',
+    'version'
   ]);
-
+  grunt.registerTask('build', [
+    'clean:dist',
+    'less:build',
+    'uglify',
+    'version'
+  ]);
 };
