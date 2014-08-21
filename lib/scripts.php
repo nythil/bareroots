@@ -25,16 +25,19 @@ function roots_scripts() {
     $assets = array(
       'css'       => '/assets/css/main.css?' . $assets['assets/css/main.css']['hash'],
       'js'        => '/assets/js/scripts.js?' . $assets['assets/js/scripts.js']['hash'],
+      'normalize' => '/assets/css/normalize.css',
       'modernizr' => '/assets/js/vendor/modernizr-2.8.3.js',
     );
   } else {
     $assets     = array(
       'css'       => '/assets/css/main.min.css?' . $assets['assets/css/main.min.css']['hash'],
       'js'        => '/assets/js/scripts.min.js?' . $assets['assets/js/scripts.min.js']['hash'],
+      'normalize' => '/assets/css/normalize.css',
       'modernizr' => '/assets/js/vendor/modernizr.min.js',
     );
   }
 
+  wp_enqueue_style('normalize', get_template_directory_uri() . $assets['normalize'], false, null);
   wp_enqueue_style('roots_css', get_template_directory_uri() . $assets['css'], false, null);
 
   if (is_single() && comments_open() && get_option('thread_comments')) {

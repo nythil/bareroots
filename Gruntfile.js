@@ -49,7 +49,6 @@ module.exports = function(grunt) {
       default: {
         options: {
           format: true,
-          length: 32,
           manifest: 'assets/manifest.json',
           querystring: {
             style: 'roots_css',
@@ -78,7 +77,9 @@ module.exports = function(grunt) {
     clean: {
       dist: [
         'assets/css/main.min.css',
-        'assets/js/scripts.min.js'
+        'assets/css/main.css.map',
+        'assets/js/scripts.min.js',
+        'assets/js/vendor/modernizr.min.js'
       ]
     }
   });
